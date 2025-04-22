@@ -1,6 +1,11 @@
 package dev.samir.tips;
 
+import java.util.List;
+
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -8,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
  * This class is responsible for processing incoming HTTP requests
  * and returning the appropriate responses.	
  */
-@RestController
+@RestController(value = "/api")
 public class TipController {
 
 	/**
@@ -28,12 +33,61 @@ public class TipController {
 	
 	/**
 	 * Endpoint to get a random tip.
-	 * This method handles GET requests to the "/tip" URL.
+	 * This method handles GET requests to the "/tip/random" URL.
 	 * @return a random Tip object from the database.
 	 */
-	@GetMapping("/tip")
-	public Tip getTip() {
+	@GetMapping("/tip/random")
+	public Tip getRandomTip() {
 		return tipService.findRandomTip();
+	}
+	
+	/**
+	 * Endpoint to get all tips.
+	 * This method handles GET requests to the "/tip" URL.
+	 * @return a list of all Tip objects from the database.
+	 */
+	@GetMapping("/tip")
+	public List<Tip> getAllTips() {
+		return tipService.getAllTips();
+	}
+	
+	/**
+	 * Endpoint to get a tip by its ID.
+	 * This method handles GET requests to the "/tip/{id}" URL.
+	 * @param id the ID of the tip to retrieve
+	 * @return the Tip object with the specified ID
+	 */
+	@GetMapping("/tip/{id}")
+	public Tip getTipById(@PathVariable Long id) {
+		return tipService.getTipById(id);
+	}
+	
+	/**
+	 * Endpoint to insert a new tip.
+	 * This method handles POST requests to the "/tip" URL.
+	 * @param tip the Tip object to insert
+	 * @return the inserted Tip object
+	 */
+	@PostMapping("/tip")
+	public Tip insertTip(Tip tip) {
+		return tipService.upsertTip(tip);
+	}
+	
+	/**
+	 * Endpoint to update an existing tip.
+	 * This method handles PATCH requests to the "/tip" URL.
+	 * @param tip the Tip object to update
+	 * @return the updated Tip object
+	 * @throws ResourceNotFoundException if the tip with the given ID does not exist
+	 */
+	@PatchMapping("/tip")
+	public Tip updateTip(Tip tip) throws ResourceNotFoundException {
+		// Check if the tip with the given ID exists
+		if (tipService.getTipById(tip.getId()) == null) {
+			// Handle the case where the tip does not exist
+			throw new ResourceNotFoundException("Tip with ID " + tip.getId() + " not found");
+		}
+		return tipService.upsertTip(tip);
 	}
 	
 }
