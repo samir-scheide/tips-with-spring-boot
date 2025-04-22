@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+  <include file="db.changelog-master.xml" relativeToChangelogFile="true"/>
+  
+  <changeSet runOrder="last" id="test" author="samir-scheide">
+    <insert tableName="tb01_tips">
+      <column name="tip_id" valueNumeric="1" />
+      <column name="tip_message" value="First Message" />
+    </insert>
+      <insert tableName="tb01_tips">
+      <column name="tip_id" valueNumeric="2" />
+      <column name="tip_message" value="Second Message" />
+    </insert>
+      <insert tableName="tb01_tips">
+      <column name="tip_id" valueNumeric="3" />
+      <column name="tip_message" value="Third Message" />
+    </insert>
+  </changeSet>
+  
+</databaseChangeLog>

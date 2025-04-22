@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+  <changeSet id="1" author="samir-scheide">
+    <createTable tableName="tb01_tips">
+      <column name="tip_id" type="bigint" autoIncrement="true" remarks="ID of the tip">
+        <constraints primaryKey="true" nullable="false" uniqueConstraintName="tb01_tips_primary_key" />
+      </column>
+      <column name="tip_message" type="varchar(254)" remarks="Message of the tip">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+
+</databaseChangeLog>
