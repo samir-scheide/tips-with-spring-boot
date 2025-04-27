@@ -3,7 +3,6 @@ package dev.samir.tips;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import org.springframework.scheduling.annotation.Scheduled;
@@ -52,9 +51,7 @@ public class TipService {
 	 * @return a list of Tip objects
 	 */
 	public List<Tip> getAllTips() {
-		return StreamSupport
-			.stream(tipRepository.findAll().spliterator(), true)
-			.collect(Collectors.toList());
+		return StreamSupport.stream(tipRepository.findAll().spliterator(), true).toList();
 	}
 	
 	/**
@@ -62,17 +59,28 @@ public class TipService {
 	 * This method retrieves a tip from the database using its ID.
 	 * @param id the ID of the tip to retrieve
 	 * @return the Tip object with the specified ID, or null if not found
+	 * @throws TipNotFoundException if the tip is not found
 	 */
-	public Tip getTipById(Long id) {
-		return tipRepository.findById(id).orElse(null);
+	public Tip findById(Long id) throws TipNotFoundException {
+		return tipRepository.findById(id).orElseThrow(TipNotFoundException::new);
 	}
 	
 	/**
-	 * This method saves a new Tip object to the database, or updates an existing one.
+	 * This method updates a tip in the database.
 	 * @param tip the Tip object to save or update
 	 * @return the saved or updated Tip object
+	 * @throws TipNotFoundException if the tip is not found
 	 */
-	public Tip upsertTip(Tip tip) {
+	public Tip update(Tip tip) throws TipNotFoundException {
+		return tipRepository.save(findById(tip.getId()));
+	}
+	
+	/**
+	 * This method inserts a new tip into the database.
+	 * @param tip the Tip object to insert
+	 * @return the inserted Tip object
+	 */
+	public Tip insert(Tip tip) {
 		return tipRepository.save(tip);
 	}
 	

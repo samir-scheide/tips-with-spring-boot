@@ -32,6 +32,14 @@ public class Tip {
 	@Column(name = "tip_message")
 	private String message;
 
+	/**
+	 * Default constructor.
+	 */
+	Tip(Long id, String message) {
+		this.id = id;
+		this.message = message;
+	}
+	
 	public Long getId() {
 		return id;
 	}

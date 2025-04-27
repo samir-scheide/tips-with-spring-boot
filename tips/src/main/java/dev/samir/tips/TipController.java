@@ -2,10 +2,13 @@ package dev.samir.tips;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -13,7 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
  * This class is responsible for processing incoming HTTP requests
  * and returning the appropriate responses.	
  */
-@RestController(value = "/api")
+@RestController
+@RequestMapping("/api")
 public class TipController {
 
 	/**
@@ -56,10 +60,11 @@ public class TipController {
 	 * This method handles GET requests to the "/tip/{id}" URL.
 	 * @param id the ID of the tip to retrieve
 	 * @return the Tip object with the specified ID
+	 * @throws TipNotFoundException 
 	 */
 	@GetMapping("/tip/{id}")
-	public Tip getTipById(@PathVariable Long id) {
-		return tipService.getTipById(id);
+	public Tip getTipById(@PathVariable Long id) throws TipNotFoundException {
+		return tipService.findById(id);
 	}
 	
 	/**
@@ -69,8 +74,8 @@ public class TipController {
 	 * @return the inserted Tip object
 	 */
 	@PostMapping("/tip")
-	public Tip insertTip(Tip tip) {
-		return tipService.upsertTip(tip);
+	public Tip insert(@RequestBody Tip tip) {
+		return tipService.insert(tip);
 	}
 	
 	/**
@@ -81,13 +86,12 @@ public class TipController {
 	 * @throws ResourceNotFoundException if the tip with the given ID does not exist
 	 */
 	@PatchMapping("/tip")
-	public Tip updateTip(Tip tip) throws ResourceNotFoundException {
-		// Check if the tip with the given ID exists
-		if (tipService.getTipById(tip.getId()) == null) {
-			// Handle the case where the tip does not exist
-			throw new ResourceNotFoundException("Tip with ID " + tip.getId() + " not found");
+	public ResponseEntity<Tip> updateTip(@RequestBody Tip tip) {
+		try {
+			return ResponseEntity.ok(tipService.update(tip));
+		} catch (TipNotFoundException e) {
+			return ResponseEntity.notFound().build();
 		}
-		return tipService.upsertTip(tip);
 	}
 	
 }
