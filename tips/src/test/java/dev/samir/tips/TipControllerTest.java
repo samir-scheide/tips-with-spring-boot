@@ -1,6 +1,9 @@
 package dev.samir.tips;
 
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -84,7 +87,7 @@ class TipControllerTest {
             .andExpect(jsonPath("$.id").value(tip.getId()))
             .andExpect(jsonPath("$.message").value(tip.getMessage()));
     }
-
+    
     /**
      * Insert a new tip and verifies the response.
      * @throws Exception if an error occurs during the request
@@ -137,5 +140,31 @@ class TipControllerTest {
 	        .content(objectMapper.writeValueAsString(tip)))
 	        .andExpect(status().isNotFound());
     }
+    
+    /**
+     * Delete a tip by ID and verifies the response.
+     * @throws Exception if an error occurs during the request
+     */
+    @Test
+    void testDeleteTip() throws Exception {
+    	
+    	doNothing().when(tipService).delete(1L);
+    	
+		mockMvc.perform(delete("/api/tip/1"))
+			.andExpect(status().isNoContent());
+	}
+    
+    /**
+	 * Attempt to delete a tip and verifies the response.
+	 * @throws Exception if an error occurs during the request
+	 */
+    @Test
+    void testDeleteTipNotFound() throws Exception {
+    	
+    	doThrow(TipNotFoundException.class).when(tipService).delete(1L);
+    	
+		mockMvc.perform(delete("/api/tip/1"))
+			.andExpect(status().isNotFound());
+	}
     
 }

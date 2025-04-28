@@ -3,6 +3,7 @@ package dev.samir.tips;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,8 +42,9 @@ public class TipController {
 	 * @return a random Tip object from the database.
 	 */
 	@GetMapping("/tip/random")
-	public Tip getRandomTip() {
-		return tipService.findRandomTip();
+	public ResponseEntity<TipResponse> getRandomTip() {
+		Tip tip = tipService.findRandomTip();
+		return ResponseEntity.ok(new TipResponse(tip.getId(), tip.getMessage()));
 	}
 	
 	/**
@@ -51,8 +53,11 @@ public class TipController {
 	 * @return a list of all Tip objects from the database.
 	 */
 	@GetMapping("/tip")
-	public List<Tip> getAllTips() {
-		return tipService.getAllTips();
+	public ResponseEntity<List<TipResponse>> getAllTips() {
+		List<TipResponse> tips = tipService.getAllTips().stream()
+			.map(tip -> new TipResponse(tip.getId(), tip.getMessage()))
+			.toList();
+		return ResponseEntity.ok(tips);
 	}
 	
 	/**
@@ -63,8 +68,13 @@ public class TipController {
 	 * @throws TipNotFoundException 
 	 */
 	@GetMapping("/tip/{id}")
-	public Tip getTipById(@PathVariable Long id) throws TipNotFoundException {
-		return tipService.findById(id);
+	public ResponseEntity<TipResponse> getTipById(@PathVariable Long id) throws TipNotFoundException {
+		try {
+			Tip tip = tipService.findById(id);
+			return ResponseEntity.ok(new TipResponse(tip.getId(), tip.getMessage()));
+		} catch (TipNotFoundException e) {
+			return ResponseEntity.notFound().build();
+		}
 	}
 	
 	/**
@@ -74,8 +84,9 @@ public class TipController {
 	 * @return the inserted Tip object
 	 */
 	@PostMapping("/tip")
-	public Tip insert(@RequestBody Tip tip) {
-		return tipService.insert(tip);
+	public ResponseEntity<TipResponse> insert(@RequestBody TipRequest tip) {
+		Tip insertedTip = tipService.insert(new Tip(tip.message()));
+		return ResponseEntity.ok(new TipResponse(insertedTip.getId(), insertedTip.getMessage()));
 	}
 	
 	/**
@@ -92,6 +103,22 @@ public class TipController {
 		} catch (TipNotFoundException e) {
 			return ResponseEntity.notFound().build();
 		}
+	}
+	
+	/**
+	 * Endpoint to delete a tip by its ID.
+	 * This method handles DELETE requests to the "/tip/{id}" URL.
+	 * @param id the ID of the tip to delete
+	 * @return a ResponseEntity indicating the result of the operation
+	 */
+	@DeleteMapping("/tip/{id}")
+	public ResponseEntity<Void> deleteTip(@PathVariable Long id) {
+		try {
+			tipService.delete(id);
+		} catch (TipNotFoundException e) {
+			return ResponseEntity.notFound().build();
+		}
+		return ResponseEntity.noContent().build();
 	}
 	
 }

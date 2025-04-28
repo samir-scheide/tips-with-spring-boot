@@ -41,7 +41,9 @@ public class TipService {
 	@Scheduled(fixedRate = 3, timeUnit = TimeUnit.SECONDS)
 	public Tip findRandomTip() {
 		Tip tip = tipRepository.findRandomTip();
-		Logger.getGlobal().info("Tip #" + tip.getId() + " [" + tip.getMessage() + "]");
+		if (tip != null) { 
+			Logger.getGlobal().info("Tip #" + tip.getId() + " [" + tip.getMessage() + "]");
+		}
 		return tip;
 	}
 	
@@ -73,6 +75,15 @@ public class TipService {
 	 */
 	public Tip update(Tip tip) throws TipNotFoundException {
 		return tipRepository.save(findById(tip.getId()));
+	}
+	
+	/**
+	 * This method deletes a tip from the database.
+	 * @param id the ID of the tip to delete
+	 * @throws TipNotFoundException if the tip is not found
+	 */
+	public void delete(Long id) throws TipNotFoundException {
+		tipRepository.deleteById(findById(id).getId());
 	}
 	
 	/**

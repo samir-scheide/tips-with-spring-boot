@@ -31,13 +31,29 @@ public class Tip {
 	 */
 	@Column(name = "tip_message")
 	private String message;
-
+	
 	/**
-	 * Default constructor.
+	 * Default constructor for JPA.
+	 * This constructor is required by JPA for entity instantiation.
+	 */
+	Tip() {}
+	
+	/**
+	 * Constructor receiving the message of the tip. Usually used for creating a new tip.
+	 * @param message the message of the tip
+	 */
+	Tip(String message) {
+		this.message = message;
+	}
+	
+	/**
+	 * Constructor receiving the tip ID and message.
+	 * @param id the tip identifier
+	 * @param message the tip message
 	 */
 	Tip(Long id, String message) {
+		this(message);
 		this.id = id;
-		this.message = message;
 	}
 	
 	public Long getId() {
