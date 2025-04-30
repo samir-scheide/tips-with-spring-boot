@@ -47,7 +47,7 @@ class TipControllerTest {
      */
     @Test
     void testGetRandomTip() throws Exception  {
-        Tip tip = new Tip(1L, "Random Tip");
+        Tip tip = new Tip(1L, "Random Tip", "2");
 
         when(tipService.findRandomTip()).thenReturn(tip);
 
@@ -63,9 +63,9 @@ class TipControllerTest {
      */
     @Test
     void testGetAllTips() throws Exception {
-        List<Tip> tips = Arrays.asList(new Tip(1L, "Tip 1"), new Tip(2L, "Tip 2"));
+        List<Tip> tips = Arrays.asList(new Tip(1L, "Tip 1", "2"), new Tip(2L, "Tip 2", "2"));
 
-        when(tipService.getAllTips()).thenReturn(tips);
+        when(tipService.getAllTips("2")).thenReturn(tips);
 
         mockMvc.perform(get("/api/tip"))
             .andExpect(status().isOk())
@@ -78,7 +78,7 @@ class TipControllerTest {
      */
     @Test
     void testGetTipById() throws Exception {
-        Tip tip = new Tip(1L, "Find by ID");
+        Tip tip = new Tip(1L, "Find by ID", "2");
 
         when(tipService.findById(1L)).thenReturn(tip);
 
@@ -94,8 +94,8 @@ class TipControllerTest {
      */
     @Test
     void testInsertTip() throws Exception {
-        Tip tip = new Tip(null, "New Tip");
-        Tip savedTip = new Tip(1L, "New Tip");
+        Tip tip = new Tip(null, "New Tip", "2");
+        Tip savedTip = new Tip(1L, "New Tip", "2");
 
         when(tipService.insert(Mockito.any())).thenReturn(savedTip);
 
@@ -113,7 +113,7 @@ class TipControllerTest {
      */
     @Test
     void testUpdateTipSuccess() throws Exception {
-        Tip tip = new Tip(1L, "Updated Tip");
+        Tip tip = new Tip(1L, "Updated Tip", "2");
 
         when(tipService.update(Mockito.any())).thenReturn(tip);
 
@@ -131,7 +131,7 @@ class TipControllerTest {
 	 */
     @Test
     void testUpdateTipNotFound() throws Exception {
-        Tip tip = new Tip(99L, "Non-existent Tip");
+        Tip tip = new Tip(99L, "Non-existent Tip", "2");
 
         when(tipService.update(Mockito.any())).thenThrow(TipNotFoundException.class);
 

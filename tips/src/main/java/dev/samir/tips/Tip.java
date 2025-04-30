@@ -33,6 +33,13 @@ public class Tip {
 	private String message;
 	
 	/**
+	 * The UUID of the tip.
+	 * This field is mapped to the "tip_uuid" column in the database.
+	 */
+	@Column(name = "tip_uuid")
+	private String uuid;
+	
+	/**
 	 * Default constructor for JPA.
 	 * This constructor is required by JPA for entity instantiation.
 	 */
@@ -50,10 +57,12 @@ public class Tip {
 	 * Constructor receiving the tip ID and message.
 	 * @param id the tip identifier
 	 * @param message the tip message
+	 * @param uuid the tip UUID
 	 */
-	Tip(Long id, String message) {
+	Tip(Long id, String message, String uuid) {
 		this(message);
 		this.id = id;
+		this.uuid = uuid;
 	}
 	
 	public Long getId() {

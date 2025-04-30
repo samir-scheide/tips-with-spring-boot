@@ -10,7 +10,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import dev.samir.draft.Draft;
+import dev.samir.draft.DraftService;
+import jakarta.validation.constraints.NotEmpty;
 
 /**
  * Controller class for handling requests related to tips.
@@ -27,6 +32,13 @@ public class TipController {
 	 * operations related to tips.
 	 */
 	private TipService tipService;
+	
+	/**
+	 * Service class for managing drafts.
+	 * This class is used to interact with the database and perform
+	 * operations related to drafts.
+	 */
+	private DraftService draftService;
 	
 	/**
 	 * Constructor for TipController.
@@ -53,8 +65,8 @@ public class TipController {
 	 * @return a list of all Tip objects from the database.
 	 */
 	@GetMapping("/tip")
-	public ResponseEntity<List<TipResponse>> getAllTips() {
-		List<TipResponse> tips = tipService.getAllTips().stream()
+	public ResponseEntity<List<TipResponse>> getAllTips(@RequestParam(required = true) @NotEmpty(message = "Tips UUID can't be null or empty.") String uuid) {
+		List<TipResponse> tips = tipService.getAllTips(uuid).stream()
 			.map(tip -> new TipResponse(tip.getId(), tip.getMessage()))
 			.toList();
 		return ResponseEntity.ok(tips);
@@ -119,6 +131,20 @@ public class TipController {
 			return ResponseEntity.notFound().build();
 		}
 		return ResponseEntity.noContent().build();
+	}
+	
+	/**
+	 * Create a draft of a tip.
+	 * This method handles POST requests to the "/draft" URL.
+	 * @param sessionUuid the UUID of the session
+	 * @param messages the list of messages to draft
+	 */
+	@PostMapping("/draft")
+	public ResponseEntity<List<Draft>> draft(@RequestBody List<Draft> messages) {
+		List<Draft> result = messages.stream()
+			.map(draft -> draftService.upsert(draft))
+			.toList();
+		return ResponseEntity.ok(result);
 	}
 	
 }

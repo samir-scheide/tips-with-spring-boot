@@ -10,14 +10,17 @@
     <insert tableName="tb01_tips">
       <column name="tip_id" valueNumeric="1" />
       <column name="tip_message" value="First Message" />
+      <column name="tip_uuid" value="123e4567-e89b-12d3-a456-426614174000" />
     </insert>
       <insert tableName="tb01_tips">
       <column name="tip_id" valueNumeric="2" />
       <column name="tip_message" value="Second Message" />
+      <column name="tip_uuid" value="123e4567-e89b-12d3-a456-426614174000" />
     </insert>
-      <insert tableName="tb01_tips">
+    <insert tableName="tb01_tips">
       <column name="tip_id" valueNumeric="3" />
       <column name="tip_message" value="Third Message" />
+      <column name="tip_uuid" value="123e4567-e89b-12d3-a456-426614174000" />
     </insert>
   </changeSet>
   

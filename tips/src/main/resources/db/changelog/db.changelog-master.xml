@@ -12,6 +12,9 @@
       <column name="tip_message" type="varchar(254)" remarks="Message of the tip">
         <constraints nullable="false" />
       </column>
+      <column name="tip_uuid" type="text" remarks="The UUID of the tip">
+        <constraints nullable="false" />
+      </column>
     </createTable>
   </changeSet>
 

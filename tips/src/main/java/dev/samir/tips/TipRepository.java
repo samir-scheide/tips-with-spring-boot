@@ -1,5 +1,7 @@
 package dev.samir.tips;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
@@ -17,5 +19,13 @@ public interface TipRepository extends CrudRepository<Tip, Long> {
 	 */
 	@Query(value = "select * from tb01_tips order by random() limit 1", nativeQuery = true)
 	public Tip findRandomTip();
+	
+	/**
+	 * Find all tips associated with a given UUID.
+	 * @param uuid the session identifier
+	 * @return a list of tips associated with the given UUID
+	 */
+	@Query(value = "select * from tb01_tips where uuid = ?1", nativeQuery = true)
+	public List<Tip> findAllByUuid(String uuid); 
 	
 }

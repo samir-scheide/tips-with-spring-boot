@@ -48,12 +48,11 @@ public class TipService {
 	}
 	
 	/**
-	 * Get all tips from the database.
-	 * This method retrieves all tips from the database using the TipRepository.
+	 * Get all tips from the database for a given UUID.
 	 * @return a list of Tip objects
 	 */
-	public List<Tip> getAllTips() {
-		return StreamSupport.stream(tipRepository.findAll().spliterator(), true).toList();
+	public List<Tip> getAllTips(String uuid) {
+		return StreamSupport.stream(tipRepository.findAllByUuid(uuid).spliterator(), true).toList();
 	}
 	
 	/**
@@ -94,5 +93,5 @@ public class TipService {
 	public Tip insert(Tip tip) {
 		return tipRepository.save(tip);
 	}
-	
+
 }
